@@ -10,7 +10,7 @@ How to use it
 
 1. Create these fake hosts in your `/etc/hosts`:
 
-        127.0.0.1 a.b.com b.com c.com
+        127.0.0.1 a.com b.com c.com a.b.com
 
 2. Start the server: `rails -p <some_port> server`
 
