@@ -22,8 +22,11 @@ Visit the host without setting any cookies at all, not even a rails default sess
 * `/happy-cookie`
 Visit the domain, setting a (first-party) from that host.
 
-* `/third-parties`
+* `/third-party-script-tags`
 Visit the domain and request (third-party) cookie-setting assets from each host via `<script>` tags.
+
+* `/third-party-iframes`
+Visit the domain and request (third-party) cookie-setting assets from each host via iframes.
 
 * `/redirect?target=<url>`
 Visit the domain and get redirected to the target URL.

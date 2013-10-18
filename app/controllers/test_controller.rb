@@ -3,7 +3,7 @@ class TestController < ApplicationController
   before_filter :request_info
   
   def index
-    render :text => "Hi, I'm #{@host}. I don't set any cookies or anything, except perhaps the rails default session cookie. But I do probably count as visiting #{request.host}"
+    render :text => "Hi, I'm #{@host}. I don't set any cookies or anything. But I do probably count as visiting #{request.host}, for whatever that is worth."
   end
 
   def happy_cookie
@@ -11,12 +11,22 @@ class TestController < ApplicationController
     render :text => "Hi, I am #{@host}, and I am setting a happy cookie."
   end
   
-  def third_parties
+  def third_party_script_tags
+  end
+
+  def third_party_iframes
   end
   
   def asset
     cookies["third_party_#{@host}"] = "I got you sucka! Love, #{@host} :)"
-    render :js => "alert('Hello, I come from a js asset at #{@host}, and I try to set a third-party cookie');"
+    respond_to do |format|
+      format.js {
+        render :js => "alert('Hello, I come from a js asset at #{@host}, and I try to set a third-party cookie');"
+      }
+      format.html {
+        render :inline => "Hello, I come from an html asset at #{@host}, and I try to set a third-party cookie"
+      }
+    end
   end
 
   def redirect

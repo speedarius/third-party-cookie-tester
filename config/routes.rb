@@ -1,7 +1,8 @@
 Third::Application.routes.draw do
 
   match "/" => 'test#index'
-  match "third-parties" => 'test#third_parties'
+  match "third-party-script-tags" => 'test#third_party_script_tags'
+  match "third-party-iframes" => 'test#third_party_iframes'
   match "asset" => 'test#asset'
   match "happy-cookie" => 'test#happy_cookie'
   match "redirect" => 'test#redirect'
