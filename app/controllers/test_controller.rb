@@ -3,7 +3,15 @@ class TestController < ApplicationController
   before_filter :request_info
   
   def index
-    render :text => "Hi, I'm #{@host}. I don't set any cookies or anything. But I do probably count as visiting #{request.host}, for whatever that is worth."
+    message = "<p>Hi, I'm #{@host}. I don't set any cookies or anything. But I do probably count as visiting #{request.host}, for whatever that is worth.</p>"
+
+    cookie_list = "<p>Cookies your browser sent me with this request:<p><ul>"
+    cookies.each do |key, val|
+      cookie_list += "<li>#{key}: #{val}</li>"
+    end
+    cookie_list += "</ul>"
+
+    render :inline => "<p>#{message}</p>#{cookie_list}"
   end
 
   def happy_cookie
@@ -34,6 +42,10 @@ class TestController < ApplicationController
   end
 
   def open_window
+  end
+
+  def iframe
+    render :inline => "<iframe src=\"#{@target}\" height=\"1\" width=\"1\"></iframe>"
   end
   
   def request_info

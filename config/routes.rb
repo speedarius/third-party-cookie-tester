@@ -6,6 +6,7 @@ Third::Application.routes.draw do
   match "asset" => 'test#asset'
   match "happy-cookie" => 'test#happy_cookie'
   match "redirect" => 'test#redirect'
+  match "iframe" => 'test#iframe'
   match "open" => 'test#open_window'
   
   # The priority is based upon order of creation:

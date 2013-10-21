@@ -17,7 +17,7 @@ How to use it
 3. Visit some of the following paths on any of the fake hosts:
 
 * `/`
-Visit the host without setting any cookies at all, not even a rails default session cookie. In Safari's web inspector you need to visit a host in order to see which cookies are available on that host -- this is a good end point for that purpose.
+Visit the host without setting any cookies at all, not even a rails default session cookie. Shows the cookies that the browser sent to the server; this is a good way to tell if cookies have been set on a particular domain. I've found that various in-browser cookie-inspection tools are not good about excluding cookies that have been blocked via third-party cookie-blocking features.
 
 * `/happy-cookie`
 Visit the domain, setting a (first-party) from that host.
@@ -30,6 +30,9 @@ Visit the domain and request (third-party) cookie-setting assets from each host 
 
 * `/redirect?target=<url>`
 Visit the domain and get redirected to the target URL.
+
+* `/iframe?target=<url>`
+Visit the domain and open an iframe to the target URL.
 
 * `/open_window?target=<url>`
 Visit the domain, then open a new window to the target URL.
