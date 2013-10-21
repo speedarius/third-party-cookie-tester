@@ -37,7 +37,7 @@ Visit the domain and open an iframe to the target URL.
 * `/open_window?target=<url>`
 Visit the domain, then open a new window to the target URL.
 
-For instance, `http://a.b.com:<some_port>/redirect?target=http://c.com:<some_port>/third_parties` will try to set third party cookies on each of `a.b.com`, `b.com`, and `c.com`, in the context of `c.com`, via redirect from `a.b.com`. To see if Safari accepts a third party cookie from `a.b.com` in this scenario, visit `http://a.b.com:5000` and look for the `third_party` cookie in the web inspector. (It doesn't.)
+For instance, `http://a.b.com:<some_port>/redirect?target=http://c.com:<some_port>/third_parties` will try to set third party cookies on each of `a.b.com`, `b.com`, and `c.com`, in the context of `c.com`, via redirect from `a.b.com`. To see if Safari accepts a third party cookie from `a.b.com` in this scenario, visit `http://a.b.com:<some_port>` and look for the `third_party` cookie in the list of received cookies. (It doesn't.)
 
 Findings
 --------
