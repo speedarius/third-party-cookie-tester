@@ -45,7 +45,11 @@ class TestController < ApplicationController
   end
 
   def iframe
-    render :inline => "<p>Hi, I am #{@host}. You don't see it, but this page has a tiny, hidden iframe to #{@target}.</p><iframe src=\"#{@target}\" height=\"1\" width=\"1\" style=\"display:none;\"></iframe>"
+    if params[:hidden]
+      render :inline => "<p>Hi, I am #{@host}. You don't see it, but this page has a tiny, hidden iframe to #{@target}.</p><iframe src=\"#{@target}\" height=\"1\" width=\"1\" style=\"display:none;\"></iframe>"
+    else
+      render :inline => "<iframe src=\"#{@target}\"></iframe>"
+    end
   end
   
   def request_info

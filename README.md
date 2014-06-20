@@ -31,8 +31,8 @@ Visit the domain and request (third-party) cookie-setting assets from each host 
 * `/redirect?target=<url>`
 Visit the domain and get redirected to the target URL.
 
-* `/iframe?target=<url>`
-Visit the domain and open an iframe to the target URL.
+* `/iframe?target=<url>&hidden=<hidden>`
+Visit the domain and open an iframe to the target URL. Accepts a 'hidden' param, which will cause the iframe to be a 1x1, with "display:none".
 
 * `/open_window?target=<url>`
 Visit the domain, then open a new window to the target URL.
@@ -55,3 +55,15 @@ When receiving a cookie from a secondary request for an asset:
 1. otherwise, reject the cookie
 
 I would not, however, be surprised to learn that there are additional caveats and provisos not covered here.
+
+
+Findings
+----------
+
+* redirects. When the browser follows a chain of redirects, the final request in the chain is considered to be the first-party. It doesn't matter if the initial request was on a different domain.
+* popup windows / tabs. Popup windows and tabs are top-level documents with their own first-party domains. If a page on domain A opens a pop-up on domain B, and domain B will be permitted to set cookies.
+* iframes. Iframes are considered to be secondary assets; their hosts are third-parties unless they match the domain of the parent document.
+* `<script>` assets. Like iframes, are considered to be secondary assets; their hosts are third parties unless they match the domain of the parent document.
+* existing cookies. Safari will make an exception for third-parties when the browser already has a cookie on the third-party domain. Chrome will not.
+* sending cookies with requests. Safari will continue to send existing cookies along with requests, it only prevents new cookies from being set in the browser. Chrome on the other hand, prevents both sending of cookies to third parties and setting cookies from third parties.
+* subdomains. ?
