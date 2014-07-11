@@ -10,9 +10,9 @@ How to use it
 
 1. Create these fake hosts in your `/etc/hosts`:
 
-        127.0.0.1 a.com b.com c.com a.b.com
+        127.0.0.1 a.com b.com c.com a.b.com a.com b.b.com
 
-2. Start the server: `rails -p <some_port> server`
+2. Start the server: `rails server -p <some_port>`
 
 3. Visit some of the following paths on any of the fake hosts:
 
@@ -39,31 +39,21 @@ Visit the domain, then open a new window to the target URL.
 
 For instance, `http://a.b.com:<some_port>/redirect?target=http://c.com:<some_port>/third_parties` will try to set third party cookies on each of `a.b.com`, `b.com`, and `c.com`, in the context of `c.com`, via redirect from `a.b.com`. To see if Safari accepts a third party cookie from `a.b.com` in this scenario, visit `http://a.b.com:<some_port>` and look for the `third_party` cookie in the list of received cookies. (It doesn't.)
 
-Findings
---------
-
-I investigated the behavior in mobile Safari on iOS/iPhone version 6.1(10B141). My findings are consistent with Safari's algorithm for accepting third-party cookies (via `<script>` tags>) being the following:
-
-When receiving a cookie from a secondary request for an asset:
-
-1. `current_host` = the host in the address bar, regardless of whether it has been reached via redirect.
-1. `third_party` = the host from which the third-party asset is requested
-1. if `third_party` is on a subdomain of `current_host`, accept the cookie.
-1. if `third_party` is the `current_host`, accept the cookie (technically not a third-party)
-1. if `current_host` is on a subdomain for `third_party`, accept the cookie
-1. if I already have a cookie on `third_party` (not a subdomain), accept the cookie
-1. otherwise, reject the cookie
-
-I would not, however, be surprised to learn that there are additional caveats and provisos not covered here.
-
 
 Findings
 ----------
+I investigated the behavior in mobile Safari (iOS 6.1(10B141)), desktop Safari (Version 7.0.4 (9537.76.4)) and Chrome (Version 35.0.1916.153). This is a summary of what I found:
 
-* redirects. When the browser follows a chain of redirects, the final request in the chain is considered to be the first-party. It doesn't matter if the initial request was on a different domain.
-* popup windows / tabs. Popup windows and tabs are top-level documents with their own first-party domains. If a page on domain A opens a pop-up on domain B, and domain B will be permitted to set cookies.
-* iframes. Iframes are considered to be secondary assets; their hosts are third-parties unless they match the domain of the parent document.
-* `<script>` assets. Like iframes, are considered to be secondary assets; their hosts are third parties unless they match the domain of the parent document.
-* existing cookies. Safari will make an exception for third-parties when the browser already has a cookie on the third-party domain. Chrome will not.
-* sending cookies with requests. Safari will continue to send existing cookies along with requests, it only prevents new cookies from being set in the browser. Chrome on the other hand, prevents both sending of cookies to third parties and setting cookies from third parties.
-* subdomains. ?
+* **Safari.** The feature is enabled by default. An exception is made for third-party cookies on domains where the browser already has a cookie set. So if the browser already has a cookie on say "track.com", the browser will allow further cookies to be set on "track.com", even in a third-party context. There is no difference I'm aware of between desktop Safari and Mobile Safari.
+
+* **Chrome.** The feature is not enabled by default. There is no exception made for pre-existing cookies on a given domain. Further, when requesting a third-party asset where the browser already has a cookie on the domain, the pre-existing cookie is not even sent along with the request for the third-party asset.
+
+* **Redirects.** When the browser follows a chain of redirects, the final request in the chain is considered to be the first-party. It doesn't matter if the initial request was on a different domain.
+
+* **Popup windows / tabs.** Popup windows and tabs are top-level documents with their own first-party domains. If a page on domain A opens a pop-up on domain B, domain B will be permitted to set cookies within that window.
+
+* **Iframes.** Iframes are considered to be secondary assets; their hosts are third-parties unless they match the domain of the parent document.
+
+* **script assets.** Like iframes, are considered to be secondary assets; their hosts are third parties unless they match the domain of the parent document.
+
+* **Subdomains.** For both Chrome and Safari, "b.com" and "b.b.com" are both considered first-parties in the context of "a.b.com".
